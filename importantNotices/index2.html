@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Messages</title>
+    <style>
+        p {
+            position: relative;
+            max-width: 30em;
+
+            background-color: #fff;
+            padding: 1.125em 1.5em;
+            font-size: 1.25em;
+            border-radius: 1rem;
+            box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, .3), 0 0.0625rem 0.125rem rgba(0, 0, 0, .2);
+        }
+
+        p::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            bottom: 100%;
+            border: .75rem solid transparent;
+            border-top: none;
+
+            border-bottom-color: #fff;
+            filter: drop-shadow(0 -0.0625rem 0.0625rem rgba(0, 0, 0, .1));
+        }
+    </style>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+</head>
+
+<body>
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/" style="color:red; marginLeft:20">Wisdom Universe student portal</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="">Home</a>
+                        </li>
+
+
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+
+    <div class="d-flex justify-content-center" style="display:flex; flex-direction: column;align-items: center">
+        <h4 className="h3 mb-3 font-weight-normal">
+            Important messages for students</h4>
+        <div id="messages">
+            
+        </div>
+    </div>
+
+</body>
+<script>
+
+    // Create WebSocket connection.
+    const socket = new WebSocket('ws://localhost:4000');
+
+    // Connection opened
+    socket.addEventListener('open', function (event) {
+        console.log('Connected to WS Server')
+    });
+
+    // Listen for messages
+    socket.addEventListener('message', function (event) {
+        console.log('Message from server ', event);
+        var reader = new FileReader();
+        reader.onload = function () {
+            console.log(reader.result)
+            const para = document.createElement("p");
+            const node = document.createTextNode( reader.result );
+            para.appendChild(node);
+            document.getElementById("messages").appendChild(para);
+        }
+        console.log(reader.readAsText(event.data));
+    });
+
+    const sendMessage = () => {
+        socket.send('Hello From Client2!');
+    }
+</script>
+
+</html>
